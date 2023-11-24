@@ -5,7 +5,7 @@ The information provided by lz-lookup are:
 - Compute Informations;
 - Memory Informations;
 - SubDevices Informations;
-- Power and Frequency Informations;
+- Power, Frequency, Temperature, and Power Supply Informations;
 
 ## Requirements
 - Level-Zero library must be installed.
