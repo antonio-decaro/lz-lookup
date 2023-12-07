@@ -224,6 +224,74 @@ void printTempProperties(zes_device_handle_t device, std::string tab) {
     }
 }
 
+void printPerformanceFactorInfo(zes_perf_handle_t perf_factor, std::string tab) {
+    zes_perf_properties_t prop {};
+    prop.stype = ZES_STRUCTURE_TYPE_PERF_PROPERTIES;
+
+    if (checkErrors(zesPerformanceFactorGetProperties(perf_factor, &prop))) {
+        std::cerr << "Failed to get performance factor properties" << std::endl;
+        return;
+    }
+
+    std::string type = "UNKNOWN";
+    switch (prop.engines)
+    {
+    case ZES_ENGINE_TYPE_FLAG_OTHER:
+        type="OTHER";
+        break;
+    case ZES_ENGINE_TYPE_FLAG_COMPUTE:
+        type="COMPUTE";
+        break;
+    case ZES_ENGINE_TYPE_FLAG_3D:
+        type="3D";
+        break;
+    case ZES_ENGINE_TYPE_FLAG_MEDIA:
+        type="MEDIA";
+        break;
+    case ZES_ENGINE_TYPE_FLAG_DMA:
+        type="DMA";
+        break;
+    case ZES_ENGINE_TYPE_FLAG_RENDER:
+        type="RENDER";
+        break;
+    case ZES_ENGINE_TYPE_FLAG_FORCE_UINT32:
+        type="FORCE_UINT32";
+        break;
+    default:
+        break;
+    }
+
+    std::cout << tab << "- Type: " << type << std::endl;
+    std::cout << tab << "- On Subdevice: " << BOOL(prop.onSubdevice) << std::endl;
+    std::cout << tab << "- Subdevice ID: " << prop.subdeviceId << std::endl;
+}
+
+void printPerformanceFactorDomainsProperties(zes_device_handle_t device, std::string tab) {
+    uint32_t num_perf_factors = 0;
+    std::vector<zes_perf_handle_t> all_perf_factors;
+
+    checkErrors(zesDeviceEnumPerformanceFactorDomains(device, &num_perf_factors, nullptr));
+    all_perf_factors.resize(num_perf_factors);
+    if (checkErrors(zesDeviceEnumPerformanceFactorDomains(device, &num_perf_factors, all_perf_factors.data()))) {
+        std::cerr << "Failed to get performance factor domains" << std::endl;
+        return;
+    }
+
+    std::cout << tab << "- Number of Performance Factor Domains: " << num_perf_factors << std::endl;
+    for (int i = 0; i < all_perf_factors.size(); i++) {
+        std::cout << tab << "\t[PERFORMANCE FACTOR DOMAIN #" << i << "]" << std::endl;
+        zes_perf_properties_t prop {};
+        prop.stype = ZES_STRUCTURE_TYPE_PERF_PROPERTIES;
+
+        if (checkErrors(zesPerformanceFactorGetProperties(all_perf_factors[i], &prop))) {
+            std::cerr << "Failed to get performance factor properties" << std::endl;
+            return;
+        }
+
+        printPerformanceFactorInfo(all_perf_factors[i], tab + "\t");
+    }
+}
+
 void printDeviceProperties(zes_device_handle_t device, std::string tab) {
     std::cout << tab << "[General Info]" << std::endl;
     printDeviceGeneralInfo(device, tab);
@@ -237,8 +305,8 @@ void printDeviceProperties(zes_device_handle_t device, std::string tab) {
     std::cout << tab << "[PSU Info]" << std::endl;
     printPsusProperties(device, tab);
 
-    // std::cout << tab << "[Temperature Info]" << std::endl;
-    // printTempProperties(device, tab);
+    std::cout << tab << "[Performance Factor Info]" << std::endl;
+    printPerformanceFactorDomainsProperties(device, tab);
 }
 
 int main() {
