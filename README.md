@@ -1,5 +1,11 @@
 # Level Zero Lookup
 Use Level-Zero to retrieve information about Intel Devices.
+The information provided by lz-lookup are:
+- General Informations;
+- Compute Informations;
+- Memory Informations;
+- SubDevices Informations;
+- Power, Frequency, Temperature, and Power Supply Informations;
 
 ## Requirements
 - Level-Zero library must be installed.
