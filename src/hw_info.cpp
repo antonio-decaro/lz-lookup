@@ -266,7 +266,7 @@ void printPerformanceFactorInfo(zes_perf_handle_t perf_factor, std::string tab) 
 
     double val = 0;
     checkErrors(zesPerformanceFactorGetConfig(perf_factor, &val));
-    std::cout << tab << "- Performance Factor: " << perf_factor << std::endl;
+    std::cout << tab << "- Performance Factor: " << val << std::endl;
 }
 
 void printPerformanceFactorDomainsProperties(zes_device_handle_t device, std::string tab) {
