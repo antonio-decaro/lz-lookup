@@ -265,7 +265,7 @@ void printPerformanceFactorInfo(zes_perf_handle_t perf_factor, std::string tab) 
     std::cout << tab << "- On Subdevice: " << BOOL(prop.onSubdevice) << std::endl;
 
     double val = 0;
-    zesPerformanceFactorGetConfig(perf_factor, &val);
+    checkErrors(zesPerformanceFactorGetConfig(perf_factor, &val));
     std::cout << tab << "- Performance Factor: " << perf_factor << std::endl;
 }
 
