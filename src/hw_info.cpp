@@ -263,7 +263,10 @@ void printPerformanceFactorInfo(zes_perf_handle_t perf_factor, std::string tab) 
 
     std::cout << tab << "- Type: " << type << std::endl;
     std::cout << tab << "- On Subdevice: " << BOOL(prop.onSubdevice) << std::endl;
-    std::cout << tab << "- Subdevice ID: " << prop.subdeviceId << std::endl;
+
+    double val = 0;
+    zesPerformanceFactorGetConfig(perf_factor, &val);
+    std::cout << tab << "- Performance Factor: " << perf_factor << std::endl;
 }
 
 void printPerformanceFactorDomainsProperties(zes_device_handle_t device, std::string tab) {
@@ -302,11 +305,11 @@ void printDeviceProperties(zes_device_handle_t device, std::string tab) {
     std::cout << tab << "[Power Info]" << std::endl;
     printDevicePowerInfo(device, tab);
 
-    std::cout << tab << "[PSU Info]" << std::endl;
-    printPsusProperties(device, tab);
-
     std::cout << tab << "[Performance Factor Info]" << std::endl;
     printPerformanceFactorDomainsProperties(device, tab);
+
+    std::cout << tab << "[PSU Info]" << std::endl;
+    printPsusProperties(device, tab);
 }
 
 int main() {
